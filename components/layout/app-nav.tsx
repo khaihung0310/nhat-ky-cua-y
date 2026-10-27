@@ -12,6 +12,7 @@ export function AppNav({ role }: { role: Role }) {
   const { t } = useI18n();
   const pathname = usePathname();
   const canWrite = can(role, "entry:create");
+  const isEditor = pathname === "/entries/new" || /^\/entries\/[^/]+\/edit$/.test(pathname);
 
   const items = [
     { href: "/", label: t.nav.home, icon: House, match: (p: string) => p === "/" },
@@ -63,16 +64,18 @@ export function AppNav({ role }: { role: Role }) {
       </header>
 
       {/* Mobile: bottom tab bar, with the write button in the middle for the owner */}
+      {/* Hidden while writing so the keyboard and the save bar have room. */}
+      {!isEditor && (
       <nav
         aria-label={t.nav.mainNavigation}
         className="pb-safe fixed inset-x-0 bottom-0 z-30 border-t border-line/70 bg-paper/95 backdrop-blur md:hidden"
       >
-        <ul className="mx-auto flex max-w-md items-end justify-around px-2 pt-1.5">
+        <ul className="mx-auto grid max-w-md grid-flow-col auto-cols-fr items-end px-1 pt-1.5">
           {items.slice(0, 2).map((item) => (
             <MobileItem key={item.href} {...item} active={item.match(pathname)} />
           ))}
           {canWrite ? (
-            <li>
+            <li className="flex justify-center">
               <Link
                 href="/entries/new"
                 aria-label={t.nav.write}
@@ -87,18 +90,19 @@ export function AppNav({ role }: { role: Role }) {
           ))}
         </ul>
       </nav>
+      )}
     </>
   );
 }
 
 function MobileItem({ href, label, icon: Icon, active }: { href: string; label: string; icon: typeof House; active: boolean }) {
   return (
-    <li>
+    <li className="min-w-0">
       <Link
         href={href}
         aria-current={active ? "page" : undefined}
         className={cn(
-          "flex min-w-14 flex-col items-center gap-0.5 rounded-2xl px-2 py-1.5 text-[0.7rem]",
+          "flex flex-col items-center gap-0.5 whitespace-nowrap rounded-2xl px-0.5 py-1.5 text-[0.68rem] leading-tight",
           active ? "text-tulip-ink" : "text-ink-soft",
         )}
       >

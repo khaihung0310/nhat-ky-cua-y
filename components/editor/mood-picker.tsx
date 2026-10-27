@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export function MoodPicker({ value, onChange, labelId }: { value: Mood | null; onChange: (m: Mood | null) => void; labelId: string }) {
   const { t } = useI18n();
   return (
-    <div role="radiogroup" aria-labelledby={labelId} className="flex flex-wrap gap-2">
+    <div role="radiogroup" aria-labelledby={labelId} className="flex flex-wrap gap-1.5">
       {MOODS.map((m) => {
         const active = value === m.key;
         return (
@@ -19,7 +19,7 @@ export function MoodPicker({ value, onChange, labelId }: { value: Mood | null; o
             aria-checked={active}
             onClick={() => onChange(active ? null : m.key)}
             className={cn(
-              "flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors",
+              "flex items-center gap-1 whitespace-nowrap rounded-full border px-2.5 py-1 text-sm transition-colors",
               active ? "border-tulip-ink bg-tulip-soft text-tulip-ink" : "border-line bg-sheet text-ink-soft hover:text-ink",
             )}
           >

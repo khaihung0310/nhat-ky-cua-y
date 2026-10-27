@@ -46,6 +46,7 @@ export default async function EntriesPage({ searchParams }: { searchParams: Prom
               type="search"
               defaultValue={filters.q}
               placeholder={t.search.placeholder}
+              aria-describedby="search-hint"
               maxLength={200}
               className="h-12 w-full rounded-full border border-line bg-sheet pl-11 pr-4 text-ink placeholder:text-ink-soft/70 focus-visible:border-tulip-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/30"
             />
@@ -55,6 +56,9 @@ export default async function EntriesPage({ searchParams }: { searchParams: Prom
           </button>
         </div>
 
+        <p id="search-hint" className="px-4 text-xs text-ink-soft">
+          {t.search.hint}
+        </p>
         <details className="group rounded-2xl border border-line bg-sheet px-4 py-3" open={Boolean(filters.mood || filters.from || filters.to || filters.withAttachments)}>
           <summary className="cursor-pointer text-sm font-medium text-ink-soft">{t.search.filters}</summary>
           <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

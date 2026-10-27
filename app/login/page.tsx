@@ -35,7 +35,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <div className="mb-8 text-center">
           <TulipMark className="mx-auto mb-5 size-14" />
           <h1 className="font-serif text-3xl leading-tight">{t.meta.appName}</h1>
-          <p className="mt-3 text-ink-soft">{t.auth.subtitle}</p>
+          <p className="mt-3 text-balance text-ink-soft">{t.auth.subtitle}</p>
         </div>
 
         <div className="rounded-[1.75rem] border border-line bg-sheet p-6 shadow-soft sm:p-7">
@@ -58,7 +58,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
           )}
           <LoginForm next={next} disabled={!configured} />
         </div>
-        <p className="mt-6 text-center text-sm text-ink-soft">{t.auth.privateNote}</p>
+        <p className="mx-auto mt-6 max-w-xs text-balance text-center text-sm text-ink-soft">{t.auth.privateNote}</p>
       </div>
     </main>
   );

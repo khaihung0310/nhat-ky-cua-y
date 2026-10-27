@@ -50,7 +50,7 @@ test("[15] default language is Vietnamese; switching returns English", () => {
   assert.equal(getDictionary("fr"), vi as unknown);
   assert.equal(getDictionary("en").nav.home, "Home");
   assert.equal(getDictionary("vi").nav.home, "Trang chủ");
-  assert.equal(format(vi.dashboard.greetingOwner, { name: "Ý" }), "Chào Ý, hôm nay của cậu thế nào? 🌷");
+  assert.equal(format(vi.dashboard.greetingOwner, { name: "Ý" }).replace(/\u00a0/g, " "), "Chào Ý, hôm nay của cậu thế nào? 🌷");
   assert.equal(format("{a} {b}", { a: 1 }), "1 {b}");
 });
 

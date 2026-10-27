@@ -8,7 +8,7 @@ import { getMonthEntries } from "@/lib/queries";
 import { buildMonthGrid, groupByDiaryDate, weekdayLabels } from "@/lib/calendar";
 import { moodEmoji } from "@/lib/moods";
 import { can } from "@/lib/permissions";
-import { addMonths, formatDiaryDate, formatMonth, isValidDateString, isValidMonthString, vnDateString } from "@/lib/time";
+import { addMonths, formatDiaryDate, formatWeekday, formatMonth, isValidDateString, isValidMonthString, vnDateString } from "@/lib/time";
 import { MonthGrid } from "@/components/calendar/month-grid";
 import { EntryCard } from "@/components/entries/entry-card";
 
@@ -77,7 +77,10 @@ export default async function CalendarPage({ searchParams }: { searchParams: Pro
           <>
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <h2 id="day-title" className="font-serif text-2xl">
-                {format(t.calendar.entriesOn, { date: formatDiaryDate(selected, locale, "long") })}
+                {/* Weekday, then the date kept on one line ("27 tháng 10, 2026" never splits). */}
+                <span className="sr-only">{format(t.calendar.entriesOn, { date: "" })}</span>
+                <span className="block text-base font-sans text-lavender-ink first-letter:uppercase">{formatWeekday(selected, locale)}</span>
+                <span className="keep">{formatDiaryDate(selected, locale, "medium")}</span>
               </h2>
               {can(session.profile.role, "entry:create") && selected <= today && (
                 <Link href={`/entries/new?date=${selected}`} className="inline-flex h-9 items-center gap-1.5 rounded-full bg-tulip-soft px-3.5 text-sm text-tulip-ink">

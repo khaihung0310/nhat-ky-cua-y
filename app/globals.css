@@ -116,6 +116,33 @@ body {
   color: var(--ink);
 }
 
+/*
+  Vietnamese wraps between syllables, so a two-syllable word ("đăng nhập",
+  "nhật ký") can easily be split across lines, and a lone syllable can end up
+  on the last line. Balance short headings and avoid orphans in body text.
+*/
+h1,
+h2,
+h3,
+h4,
+label,
+button,
+dt {
+  text-wrap: balance;
+}
+p,
+li,
+dd,
+blockquote,
+figcaption,
+time {
+  text-wrap: pretty;
+}
+/* Keep short phrases (names, dates, labels) on one line where marked. */
+.keep {
+  white-space: nowrap;
+}
+
 /* Ruled notebook paper for diary text */
 .ruled {
   --rule-gap: 2rem;
@@ -131,7 +158,7 @@ body {
 .margin-line::before {
   content: "";
   position: absolute;
-  inset-block: 0;
+  inset-block: 1.25rem; /* stay inside the rounded corners */
   inset-inline-start: 0;
   width: 2px;
   background: linear-gradient(to bottom, var(--tulip), var(--lavender));

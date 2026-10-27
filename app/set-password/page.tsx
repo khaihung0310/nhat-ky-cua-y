@@ -24,7 +24,7 @@ export default async function SetPasswordPage() {
         <div className="mb-8 text-center">
           <TulipMark className="mx-auto mb-5 size-14" />
           <h1 className="font-serif text-3xl leading-tight">{t.auth.setPasswordTitle}</h1>
-          <p className="mt-3 text-ink-soft">{t.auth.setPasswordSubtitle}</p>
+          <p className="mt-3 text-balance text-ink-soft">{t.auth.setPasswordSubtitle}</p>
         </div>
         <div className="rounded-[1.75rem] border border-line bg-sheet p-6 shadow-soft sm:p-7">
           {session.email && <p className="mb-4 text-sm text-ink-soft">{session.email}</p>}

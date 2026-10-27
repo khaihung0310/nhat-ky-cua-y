@@ -115,6 +115,11 @@ export function formatDiaryDate(dateStr: string, locale: AppLocale, style: "long
   return new Intl.DateTimeFormat(intlLocale(locale), { ...opts, timeZone: "UTC" }).format(d);
 }
 
+/** Weekday name of a diary date, e.g. "Thứ Ba" / "Tuesday". */
+export function formatWeekday(dateStr: string, locale: AppLocale): string {
+  return new Intl.DateTimeFormat(intlLocale(locale), { weekday: "long", timeZone: "UTC" }).format(dateStringToUtcDate(dateStr));
+}
+
 /** Month heading, e.g. "tháng 10 năm 2026" / "October 2026". */
 export function formatMonth(monthStr: string, locale: AppLocale): string {
   const d = dateStringToUtcDate(`${monthStr}-01`);

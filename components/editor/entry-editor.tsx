@@ -63,6 +63,7 @@ export function EntryEditor({
   const draftKey = draftKeyFor(initial.id);
   const storageKey = localDraftStorageKey(userId, draftKey);
   const draftReady = useRef(false); // don't autosave until we've checked for an existing draft
+  const [remoteChecked, setRemoteChecked] = useState(false); // server draft looked up
   const savedRef = useRef(false);
 
   const baseline = useMemo(
@@ -73,18 +74,24 @@ export function EntryEditor({
     title !== baseline.title || content !== baseline.content || mood !== baseline.mood || diaryDate !== baseline.diaryDate;
   const pendingFiles = queue.some((q) => q.status !== "done");
 
-  // ---------- Draft restore (newest of device / server) ----------
+  // ---------- Draft restore (device copy first, then server) ----------
+  // The device copy is read synchronously so the banner appears instantly; the
+  // server copy (another device, or after clearing the browser) follows.
   const draftChecked = useRef(false);
+  const dirtyRef = useRef(false);
+  dirtyRef.current = dirty;
   useEffect(() => {
     if (draftChecked.current) return; // only once per editor session
     draftChecked.current = true;
+    let local: DraftData | null = null;
+    try {
+      local = parseDraft(window.localStorage.getItem(storageKey));
+    } catch {
+      /* storage unavailable */
+    }
+    if (local && isDraftMeaningful(local, baseline)) setDraftOffer(local);
+    draftReady.current = true;
     (async () => {
-      let local: DraftData | null = null;
-      try {
-        local = parseDraft(window.localStorage.getItem(storageKey));
-      } catch {
-        /* storage unavailable */
-      }
       let remote: DraftData | null = null;
       try {
         remote = await getDraftAction(draftKey);
@@ -92,8 +99,9 @@ export function EntryEditor({
         /* offline: rely on the local copy */
       }
       const newest = pickNewestDraft(local, remote);
-      if (newest && isDraftMeaningful(newest, baseline)) setDraftOffer(newest);
-      draftReady.current = true;
+      // Only offer the server copy if the person hasn't started typing meanwhile.
+      if (newest && newest !== local && !dirtyRef.current && isDraftMeaningful(newest, baseline)) setDraftOffer(newest);
+      setRemoteChecked(true);
     })();
   }, [draftKey, storageKey, baseline]);
 
@@ -123,9 +131,14 @@ export function EntryEditor({
     } catch {
       /* quota / private mode — server copy still works */
     }
+    if (!remoteChecked) {
+      // Never overwrite a server draft we haven't looked at yet; the device copy is safe.
+      setDraftStatus("local");
+      return;
+    }
     setDraftStatus(navigator.onLine ? "saving" : "local");
     saveRemote(data);
-  }, [title, content, mood, diaryDate, dirty, draftOffer, storageKey, saveRemote]);
+  }, [title, content, mood, diaryDate, dirty, draftOffer, storageKey, saveRemote, remoteChecked]);
 
   // Retry syncing the draft when the connection comes back.
   useEffect(() => {
@@ -502,7 +515,7 @@ export function EntryEditor({
           />
         </section>
 
-        <div className="pb-safe sticky bottom-20 z-20 flex flex-wrap items-center justify-between gap-3 rounded-full border border-line bg-paper/95 px-4 py-2.5 shadow-soft backdrop-blur md:bottom-4">
+        <div className="pb-safe sticky bottom-3 z-20 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-3xl border border-line bg-paper/95 px-4 py-2.5 shadow-soft backdrop-blur md:bottom-4">
           <p className="flex items-center gap-1.5 text-sm text-ink-soft" aria-live="polite">
             {draftStatus === "saving" && (
               <>
