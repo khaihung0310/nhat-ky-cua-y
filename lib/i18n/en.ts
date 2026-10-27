@@ -242,7 +242,7 @@ export const en: Dictionary = {
   search: {
     title: "Search the diary",
     placeholder: "Search the diary…",
-    hint: "Search by title, content or date, e.g. 27/10/2026.",
+    hint: "Search by title, content or date, e.g.\u00a027/10/2026.",
     submit: "Search",
     filters: "Filters",
     mood: "Mood",

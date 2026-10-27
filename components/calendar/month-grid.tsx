@@ -65,7 +65,7 @@ export function MonthGrid({
                         aria-label={label}
                         aria-current={isToday ? "date" : undefined}
                         className={cn(
-                          "relative flex aspect-square flex-col items-center justify-center rounded-2xl text-sm transition-colors sm:text-base",
+                          "relative flex aspect-square flex-col items-center justify-center gap-0.5 rounded-2xl text-sm leading-none transition-colors sm:text-base",
                           !d.inMonth && "text-ink-soft/45",
                           d.inMonth && !isSel && "hover:bg-paper-deep",
                           isSel && "bg-tulip-ink font-semibold text-white dark:text-paper",
@@ -75,7 +75,7 @@ export function MonthGrid({
                       >
                         <span>{d.day}</span>
                         {count > 0 && (
-                          <span className="absolute bottom-1 text-[0.7rem] leading-none sm:bottom-1.5" aria-hidden>
+                          <span className="text-[0.65rem] leading-none sm:text-xs" aria-hidden>
                             {moods[d.date] ?? (
                               <span className={cn("inline-block size-1.5 rounded-full", isSel ? "bg-white" : "bg-tulip-ink")} />
                             )}

@@ -240,7 +240,7 @@ export const vi = {
   search: {
     title: "Tìm trong nhật ký",
     placeholder: "Tìm trong nhật ký…",
-    hint: "Tìm theo tiêu đề, nội dung hoặc ngày, ví dụ 27/10/2026.",
+    hint: "Tìm theo tiêu đề, nội dung hoặc ngày, ví\u00a0dụ\u00a027/10/2026.",
     submit: "Tìm",
     filters: "Bộ lọc",
     mood: "Cảm xúc",

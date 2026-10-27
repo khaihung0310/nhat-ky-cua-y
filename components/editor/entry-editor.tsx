@@ -60,6 +60,15 @@ export function EntryEditor({
   const [showRecorder, setShowRecorder] = useState(Boolean(startWithVoice));
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const titleRef = useRef<HTMLTextAreaElement>(null);
+
+  // Long titles wrap onto more lines instead of being cut off (mobile).
+  useEffect(() => {
+    const el = titleRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [title]);
   const draftKey = draftKeyFor(initial.id);
   const storageKey = localDraftStorageKey(userId, draftKey);
   const draftReady = useRef(false); // don't autosave until we've checked for an existing draft
@@ -412,15 +421,24 @@ export function EntryEditor({
         <div className="margin-line space-y-5 rounded-[1.5rem] border border-line bg-sheet p-5 pl-7 sm:p-8 sm:pl-10">
           <div>
             <Label htmlFor="title">{t.editor.titleLabel}</Label>
-            <Input
+            <Textarea
               id="title"
+              ref={titleRef}
+              rows={1}
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value.replace(/\n/g, " "))}
+              onKeyDown={(e) => {
+                // A title is one line: Enter moves on to the content instead.
+                if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+                  e.preventDefault();
+                  textareaRef.current?.focus();
+                }
+              }}
               maxLength={TITLE_MAX}
               placeholder={t.editor.titlePlaceholder}
               aria-invalid={Boolean(titleErr)}
               aria-describedby={titleErr ? "title-error" : undefined}
-              className="h-auto border-0 bg-transparent px-0 py-1 font-serif text-2xl focus-visible:ring-0 sm:text-3xl"
+              className="resize-none overflow-hidden rounded-none border-0 bg-transparent px-0 py-1 font-serif text-2xl leading-snug focus-visible:ring-0 sm:text-3xl"
               autoComplete="off"
               required
             />
