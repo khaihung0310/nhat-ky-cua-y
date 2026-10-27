@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+/*
+  Design idea: a paper notebook with pressed tulips.
+  - Paper (warm cream) and plum ink instead of white/black.
+  - Tulip pink for actions, lavender for dates & time, sage for calm/success.
+  - Diary text is set in a serif on faint ruled lines; the interface uses a
+    clean sans-serif. Both fonts fully support Vietnamese diacritics.
+*/
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --paper: #fbf6ee;
+  --paper-deep: #f4ece0;
+  --sheet: #fffdf9;
+  --ink: #3b3340;
+  --ink-soft: #6b6070;
+  --line: #eadfd2;
+  --rule: rgba(185, 174, 220, 0.28);
+
+  --tulip: #e7a3b4;
+  --tulip-soft: #f8e1e7;
+  --tulip-ink: #a84a68; /* AA on paper */
+  --lavender: #b9aedc;
+  --lavender-soft: #ece8f7;
+  --lavender-ink: #5e5296;
+  --sage: #a9c2a6;
+  --sage-soft: #e5eee3;
+  --sage-ink: #46613f;
+  --danger: #b4423f;
+  --danger-soft: #f8e3e0;
+
+  --ring: #a84a68;
+  --shadow: 0 1px 2px rgba(59, 51, 64, 0.06), 0 8px 24px -12px rgba(120, 80, 100, 0.22);
+}
+
+.dark {
+  --paper: #1d1822;
+  --paper-deep: #17131b;
+  --sheet: #26202c;
+  --ink: #efe7ee;
+  --ink-soft: #b9adbb;
+  --line: #3a3141;
+  --rule: rgba(185, 174, 220, 0.12);
+
+  --tulip: #d98aa0;
+  --tulip-soft: #3d2731;
+  --tulip-ink: #f0a9bd;
+  --lavender: #8f84bf;
+  --lavender-soft: #2d2840;
+  --lavender-ink: #c9c0f0;
+  --sage: #7f9b7c;
+  --sage-soft: #24302a;
+  --sage-ink: #b5d1b1;
+  --danger: #f0928c;
+  --danger-soft: #3b2224;
+
+  --ring: #f0a9bd;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -14px rgba(0, 0, 0, 0.6);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-sheet: var(--sheet);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-tulip: var(--tulip);
+  --color-tulip-soft: var(--tulip-soft);
+  --color-tulip-ink: var(--tulip-ink);
+  --color-lavender: var(--lavender);
+  --color-lavender-soft: var(--lavender-soft);
+  --color-lavender-ink: var(--lavender-ink);
+  --color-sage: var(--sage);
+  --color-sage-soft: var(--sage-soft);
+  --color-sage-ink: var(--sage-ink);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-lora), ui-serif, Georgia, serif;
+
+  --shadow-soft: var(--shadow);
+  --radius-page: 1.25rem;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible, consistent keyboard focus everywhere */
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+::selection {
+  background: var(--tulip-soft);
+  color: var(--ink);
+}
+
+/* Ruled notebook paper for diary text */
+.ruled {
+  --rule-gap: 2rem;
+  background-image: linear-gradient(to bottom, transparent calc(var(--rule-gap) - 1px), var(--rule) calc(var(--rule-gap) - 1px));
+  background-size: 100% var(--rule-gap);
+  line-height: var(--rule-gap);
+}
+
+/* Thin margin line on a page, like a notebook */
+.margin-line {
+  position: relative;
+}
+.margin-line::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--tulip), var(--lavender));
+  opacity: 0.55;
+  border-radius: 2px;
+}
+
+/* Native <dialog> styling (used for confirmations and the photo viewer) */
+dialog::backdrop {
+  background: rgba(40, 30, 45, 0.45);
+  backdrop-filter: blur(3px);
+}
+dialog[open] {
+  animation: dialog-in 180ms ease-out;
+}
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile safe-area for the bottom navigation */
+.pb-safe {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}

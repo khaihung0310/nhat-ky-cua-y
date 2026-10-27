@@ -1,0 +1,25 @@
+<!--
+  Supabase → Authentication → Emails → "Invite user".
+  Subject:  Một món quà nhỏ dành cho cậu 🌷
+  Paste everything below as the message body (HTML).
+  The link goes to /auth/confirm, which verifies the invitation and opens
+  "Đặt mật khẩu". {{ .SiteURL }} must be your app address (Authentication → URL Configuration).
+-->
+<div style="background:#fbf6ee;padding:32px 16px;font-family:Georgia,'Times New Roman',serif;color:#3b3340">
+  <div style="max-width:480px;margin:0 auto;background:#fffdf9;border:1px solid #eadfd2;border-radius:20px;padding:32px">
+    <p style="font-size:40px;margin:0 0 12px">🌷</p>
+    <h1 style="font-weight:normal;font-size:26px;margin:0 0 16px">Một góc nhỏ, chỉ dành cho cậu.</h1>
+    <p style="font-size:17px;line-height:1.7;margin:0 0 24px;color:#6b6070">
+      Có một cuốn nhật ký đang chờ cậu. Bấm vào nút bên dưới để đặt mật khẩu và mở nó nhé.
+    </p>
+    <p style="margin:0 0 28px">
+      <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=invite&next=/set-password"
+         style="display:inline-block;background:#a84a68;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:999px;font-family:Arial,sans-serif;font-size:16px">
+        Mở nhật ký của tớ
+      </a>
+    </p>
+    <p style="font-size:13px;line-height:1.6;color:#6b6070;margin:0">
+      Link chỉ dùng được một lần và sẽ hết hạn sau một thời gian. Nếu link không mở được, hãy nhắn để được gửi lại nhé.
+    </p>
+  </div>
+</div>
