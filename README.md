@@ -137,7 +137,7 @@ Dashboard → *Authentication*:
 1. **Sign In / Providers → Email**: enabled. *Confirm email* may stay on.
 2. **Sign In / Providers → User Signups**: turn **“Allow new users to sign up” OFF**. This is what disables public registration.
 3. **URL Configuration**: set *Site URL* to your Vercel URL (after deployment, e.g. `https://nhat-ky-cua-y.vercel.app`). For local development add `http://localhost:3000` to *Redirect URLs*.
-4. (Recommended) *Policies / Passwords*: minimum length 10.
+4. Passwords need at least 6 characters (the Supabase minimum).
 
 Even if sign-up were accidentally re-enabled, a new account has **no role** and the database returns nothing to it (tested).
 
@@ -145,7 +145,7 @@ Even if sign-up were accidentally re-enabled, a new account has **no role** and 
 
 *Authentication → Users → Add user → Create new user*:
 
-- Email: Ý's email · Password: a strong temporary password · **Auto Confirm User: on**.
+- Email: Ý's email · Password: a temporary password (6+ characters) · **Auto Confirm User: on**.
 
 Give Ý the password privately; she can change it in *Cài đặt → Đổi mật khẩu*.
 

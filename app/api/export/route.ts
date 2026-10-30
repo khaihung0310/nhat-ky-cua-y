@@ -45,6 +45,13 @@ export async function GET() {
     if (!data || data.length < PAGE) break;
   }
 
+  // Saved links are small; if they can't be read the diary export still proceeds.
+  const { data: links } = await supabase
+    .from("saved_links")
+    .select("id, url, title, note, created_at, updated_at")
+    .order("created_at", { ascending: true })
+    .limit(5000);
+
   const urls = new Map<string, string>();
   const bucket = supabase.storage.from(STORAGE_BUCKET);
   for (let i = 0; i < attachments.length; i += 100) {
@@ -61,6 +68,7 @@ export async function GET() {
       owner: { displayName: session.profile.display_name },
       entries,
       attachments: attachments.map((a) => ({ ...a, url: urls.get(a.storage_path) ?? null })),
+      links: links ?? [],
     },
     { headers: { "Cache-Control": "private, no-store" } },
   );

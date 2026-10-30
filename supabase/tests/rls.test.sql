@@ -278,6 +278,58 @@ select test.ok((select count(*) from public.diary_drafts where entry_id = 'aaaaa
   '[4] edit drafts are removed with the entry (cascade)');
 commit;
 
+-- =============================================================================
+-- Saved links ("Liên kết"): owner manages, viewer reads, anon nothing
+-- =============================================================================
+begin;
+set local role authenticated;
+set local request.jwt.claim.sub = '11111111-1111-1111-1111-111111111111';
+insert into public.saved_links (id, owner_id, url, title, note) values
+  ('cccccccc-0000-0000-0000-000000000001', '11111111-1111-1111-1111-111111111111',
+   'https://www.youtube.com/watch?v=abc', 'Bài hát hôm nay', 'Nghe lúc đi dạo quanh hồ');
+select test.ok(true, '[links] owner can save a link with a note');
+select test.ok((select created_at is not null from public.saved_links where id = 'cccccccc-0000-0000-0000-000000000001'),
+  '[links] saved time is recorded automatically');
+select test.ok(test.affected($$ update public.saved_links set note = 'đã sửa' where id = 'cccccccc-0000-0000-0000-000000000001' $$) = 1,
+  '[links] owner can edit a link');
+select test.denied($$ insert into public.saved_links (owner_id, url) values ('11111111-1111-1111-1111-111111111111', 'javascript:alert(1)') $$,
+  '[links] javascript: links are rejected');
+select test.denied($$ insert into public.saved_links (owner_id, url) values ('11111111-1111-1111-1111-111111111111', 'data:text/html,<script>x</script>') $$,
+  '[links] data: links are rejected');
+select test.denied($$ update public.saved_links set owner_id = '22222222-2222-2222-2222-222222222222' $$,
+  '[links] link ownership cannot be reassigned');
+commit;
+
+begin;
+set local role authenticated;
+set local request.jwt.claim.sub = '22222222-2222-2222-2222-222222222222';
+select test.ok((select count(*) from public.saved_links) = 1, '[links] viewer can read saved links');
+select test.denied($$ insert into public.saved_links (owner_id, url) values ('22222222-2222-2222-2222-222222222222', 'https://example.com') $$,
+  '[links] viewer cannot add links');
+select test.denied($$ insert into public.saved_links (owner_id, url) values ('11111111-1111-1111-1111-111111111111', 'https://example.com') $$,
+  '[links] viewer cannot add links as the owner');
+select test.ok(test.affected($$ update public.saved_links set note = 'hacked' $$) = 0, '[links] viewer cannot edit links');
+select test.ok(test.affected($$ delete from public.saved_links $$) = 0, '[links] viewer cannot delete links');
+commit;
+
+begin;
+set local role anon;
+select test.denied($$ select * from public.saved_links $$, '[links] anon cannot read links');
+rollback;
+
+begin;
+set local role authenticated;
+set local request.jwt.claim.sub = '33333333-3333-3333-3333-333333333333';
+select test.ok((select count(*) from public.saved_links) = 0, '[links] user without a role cannot read links');
+rollback;
+
+begin;
+set local role authenticated;
+set local request.jwt.claim.sub = '11111111-1111-1111-1111-111111111111';
+select test.ok(test.affected($$ delete from public.saved_links where id = 'cccccccc-0000-0000-0000-000000000001' $$) = 1,
+  '[links] owner can delete a link');
+commit;
+
 \o
 \echo ''
 \echo 'ALL RLS TESTS PASSED'

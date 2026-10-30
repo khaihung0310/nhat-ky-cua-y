@@ -90,3 +90,9 @@ test("dayOfYear", () => {
   assert.equal(dayOfYear("2026-12-31"), 365);
   assert.equal(dayOfYear("2028-12-31"), 366);
 });
+
+test("compact Vietnamese date-time", async () => {
+  const { formatVnDateTime } = await import("../../lib/time.ts");
+  assert.equal(formatVnDateTime("2026-10-27T05:27:00Z", "vi"), "27/10/2026, 12:27");
+  assert.equal(formatVnDateTime("2026-10-27T17:30:00Z", "en"), "28/10/2026, 00:30");
+});

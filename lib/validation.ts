@@ -63,7 +63,8 @@ export function validateDisplayName(value: unknown): { ok: true; value: string }
   return { ok: true, value: v };
 }
 
-export const PASSWORD_MIN = 10;
+// Supabase Auth itself requires at least 6 characters, so this cannot go lower.
+export const PASSWORD_MIN = 6;
 
 export function validatePassword(pw: unknown, confirm: unknown): "ok" | "too_short" | "mismatch" | "too_long" {
   if (typeof pw !== "string" || pw.length < PASSWORD_MIN) return "too_short";

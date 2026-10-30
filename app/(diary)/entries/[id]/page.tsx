@@ -57,7 +57,7 @@ export default async function EntryPage({ params }: { params: Promise<{ id: stri
 
       {/* 1. Title */}
       <header className="margin-line rounded-t-[1.5rem] border border-b-0 border-line bg-sheet px-6 pb-2 pt-7 sm:px-10">
-        <h1 className="font-serif text-[1.9rem] leading-tight sm:text-4xl">{entry.title}</h1>
+        <h1 className="font-serif text-[1.9rem] leading-tight [text-wrap:pretty] sm:text-4xl">{entry.title}</h1>
         {/* 2. Date and mood */}
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
           <time dateTime={entry.diary_date} className="text-lavender-ink">
@@ -72,7 +72,12 @@ export default async function EntryPage({ params }: { params: Promise<{ id: stri
         </div>
         <p className="mt-1 text-xs text-ink-soft">
           {format(t.entry.writtenAt, { time: formatVnTime(entry.created_at, locale) })}
-          {edited && <> · {format(t.entry.updatedAt, { time: formatVnDateTime(entry.updated_at, locale) })}</>}
+          {edited && (
+            <>
+              {" · "}
+              <span className="keep">{format(t.entry.updatedAt, { time: formatVnDateTime(entry.updated_at, locale) })}</span>
+            </>
+          )}
         </p>
       </header>
 

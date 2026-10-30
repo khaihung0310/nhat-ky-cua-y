@@ -5,7 +5,7 @@ import { isMood } from "@/lib/moods";
 import { isUuid } from "@/lib/files";
 import { isValidDateString, monthRange, parseUserDate } from "@/lib/time";
 import { normalizeSearchQuery } from "@/lib/validation";
-import type { DiaryAttachment, DiaryEntry, EntryListItem, SignedAttachment } from "@/lib/types";
+import type { DiaryAttachment, DiaryEntry, EntryListItem, SavedLink, SignedAttachment } from "@/lib/types";
 
 // All queries run with the signed-in user's session → RLS decides what is visible.
 
@@ -147,4 +147,16 @@ export async function getMoodRange(from: string, to: string) {
     .limit(1000);
   if (error) throw new Error("Failed to load moods");
   return (data ?? []) as Pick<DiaryEntry, "id" | "title" | "mood" | "diary_date" | "created_at">[];
+}
+
+/** Saved links, newest first. RLS: owner + viewer can read; nobody else. */
+export async function getSavedLinks(limit = 500): Promise<SavedLink[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("saved_links")
+    .select("id, owner_id, url, title, note, created_at, updated_at")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) throw new Error("Failed to load links");
+  return (data ?? []) as SavedLink[];
 }

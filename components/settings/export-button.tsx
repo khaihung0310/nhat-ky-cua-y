@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Download, Loader2 } from "lucide-react";
-import { attachmentZipPaths, buildReadableHtml, type ExportAttachment, type ExportEntry } from "@/lib/export-format";
+import { attachmentZipPaths, buildReadableHtml, type ExportAttachment, type ExportEntry, type ExportLink } from "@/lib/export-format";
 import { format } from "@/lib/i18n";
 import { useI18n } from "@/lib/i18n/client";
 import { vnDateString } from "@/lib/time";
@@ -16,6 +16,7 @@ type Manifest = {
   owner: { displayName: string };
   entries: ExportEntry[];
   attachments: (ExportAttachment & { url: string | null })[];
+  links?: ExportLink[];
 };
 
 /**
@@ -73,9 +74,10 @@ export function ExportButton() {
               path_in_zip: zipPaths.get(a.id),
             })),
         })),
+        links: manifest.links ?? [],
       };
       zip.file("diary.json", JSON.stringify(json, null, 2));
-      zip.file("diary.html", buildReadableHtml(manifest.owner.displayName, manifest.entries, manifest.attachments, zipPaths, manifest.exportedAt));
+      zip.file("diary.html", buildReadableHtml(manifest.owner.displayName, manifest.entries, manifest.attachments, zipPaths, manifest.exportedAt, manifest.links ?? []));
       zip.file(
         "README.txt",
         [
@@ -83,7 +85,7 @@ export function ExportButton() {
           `Exported: ${manifest.exportedAt}`,
           "",
           "diary.html  — open in any browser to read the diary with photos and recordings.",
-          "diary.json  — complete structured data (dates are Vietnamese calendar dates, Asia/Ho_Chi_Minh; timestamps are UTC).",
+          "diary.json  — complete structured data incl. saved links (dates are Vietnamese calendar dates, Asia/Ho_Chi_Minh; timestamps are UTC).",
           "attachments/ — original photos, voice recordings and files, one folder per entry.",
         ].join("\n"),
       );

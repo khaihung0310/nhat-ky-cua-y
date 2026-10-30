@@ -137,18 +137,10 @@ export function formatVnTime(instant: string | Date, locale: AppLocale): string 
   }).format(d);
 }
 
-/** Full date + time of an instant in Vietnam. */
+/** Compact date + time of an instant in Vietnam, e.g. "27/10/2026, 16:27". */
 export function formatVnDateTime(instant: string | Date, locale: AppLocale): string {
   const d = instant instanceof Date ? instant : new Date(instant);
-  return new Intl.DateTimeFormat(intlLocale(locale), {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: VN_TIME_ZONE,
-  }).format(d);
+  return `${formatDiaryDate(vnDateString(d), locale, "short")}, ${formatVnTime(d, locale)}`;
 }
 
 /** Hour (0-23) in Vietnam — used for a time-of-day greeting. */

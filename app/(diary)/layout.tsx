@@ -20,7 +20,7 @@ export default async function DiaryLayout({ children }: { children: React.ReactN
         {t.nav.skipToContent}
       </a>
       <AppNav role={session.profile.role} />
-      <main id="main" className="mx-auto w-full max-w-5xl px-4 pb-32 pt-6 sm:px-6 md:pb-16 md:pt-10">
+      <main id="main" className="mx-auto w-full max-w-5xl px-4 pb-32 pt-3 sm:px-6 md:pb-16 md:pt-10">
         {children}
       </main>
     </div>

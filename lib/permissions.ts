@@ -15,6 +15,7 @@ export type Action =
   | "attachment:delete"
   | "audio:record"
   | "draft:use"
+  | "link:manage"
   | "diary:export"
   | "profile:update-own"
   | "password:change-own";
@@ -30,6 +31,7 @@ const CAPABILITIES: Record<Role, ReadonlySet<Action>> = {
     "attachment:delete",
     "audio:record",
     "draft:use",
+    "link:manage",
     "diary:export",
     "profile:update-own",
     "password:change-own",

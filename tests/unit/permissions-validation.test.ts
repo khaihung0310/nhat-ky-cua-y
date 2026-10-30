@@ -5,7 +5,7 @@ import { safeRedirectPath, validateDisplayName, validateEntryInput, validatePass
 import { countMoods, isMood, moodEmoji } from "../../lib/moods.ts";
 
 test("[6] viewer capabilities are read-only", () => {
-  for (const a of ["entry:create", "entry:update", "entry:delete", "attachment:upload", "attachment:delete", "audio:record", "draft:use", "diary:export"] as const) {
+  for (const a of ["entry:create", "entry:update", "entry:delete", "attachment:upload", "attachment:delete", "audio:record", "draft:use", "link:manage", "diary:export"] as const) {
     assert.equal(can("viewer", a), false, a);
   }
   for (const a of ["entry:read", "attachment:read", "profile:update-own", "password:change-own"] as const) {

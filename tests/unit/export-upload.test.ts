@@ -40,3 +40,14 @@ test("export: unique, safe, Vietnamese-friendly paths inside the ZIP", () => {
   assert.notEqual(entryFolder(e1), entryFolder(e2));
   assert.equal(safeName("   "), "untitled");
 });
+
+test("export: saved links are included safely in diary.html", () => {
+  const html = buildReadableHtml("Ý", [], [], new Map(), "2026-10-30T00:00:00Z", [
+    { id: "1", url: "https://youtube.com/watch?v=a&b=<x>", title: "<b>Bài hát</b>", note: "nghe khi buồn", created_at: "2026-10-30T10:00:00Z", updated_at: "2026-10-30T10:00:00Z" },
+    { id: "2", url: "javascript:alert(1)", title: "evil", note: "", created_at: "2026-10-30T10:00:00Z", updated_at: "2026-10-30T10:00:00Z" },
+  ]);
+  assert.ok(html.includes("Liên kết đã lưu"));
+  assert.ok(html.includes('href="https://youtube.com/watch?v=a&amp;b=&lt;x&gt;"'));
+  assert.ok(html.includes("&lt;b&gt;Bài hát&lt;/b&gt;"));
+  assert.ok(!html.includes("javascript:"));
+});

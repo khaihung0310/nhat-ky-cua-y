@@ -47,3 +47,13 @@ export type EntryListItem = Pick<DiaryEntry, "id" | "title" | "content" | "mood"
 export type ActionResult<T = null> =
   | { ok: true; data: T }
   | { ok: false; error: string; fieldErrors?: Record<string, string> };
+
+export type SavedLink = {
+  id: string;
+  owner_id: string;
+  url: string;
+  title: string;
+  note: string;
+  created_at: string;
+  updated_at: string;
+};

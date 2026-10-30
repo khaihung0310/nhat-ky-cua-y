@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpen, CalendarDays, Mic, PenLine, Smile } from "lucide-react";
+import { BookOpen, CalendarDays, Link2, Mic, PenLine, Smile } from "lucide-react";
 import { requireMember } from "@/lib/auth";
 import { getI18n } from "@/lib/i18n/server";
 import { format } from "@/lib/i18n";
@@ -27,6 +27,7 @@ export default async function DashboardPage() {
     : [
         { href: "/entries", icon: BookOpen, label: t.dashboard.browseEntries, hint: t.dashboard.browseEntriesHint, tone: "tulip" },
         { href: "/calendar", icon: CalendarDays, label: t.dashboard.viewCalendar, hint: t.dashboard.viewCalendarHint, tone: "lavender" },
+        { href: "/links", icon: Link2, label: t.dashboard.viewLinks, hint: t.dashboard.viewLinksHint, tone: "paper" },
         { href: "/moods", icon: Smile, label: t.dashboard.viewMoods, hint: t.dashboard.viewMoodsHint, tone: "sage" },
       ];
 
@@ -53,7 +54,7 @@ export default async function DashboardPage() {
       </section>
 
       <section aria-label={t.dashboard.actions}>
-        <ul className={`grid gap-3 ${actions.length === 4 ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-1 sm:grid-cols-3"}`}>
+        <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {actions.map(({ href, icon: Icon, label, hint, tone }) => (
             <li key={href}>
               <Link

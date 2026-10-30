@@ -26,6 +26,8 @@ export type ExportAttachment = {
   storage_path: string;
 };
 
+export type ExportLink = { id: string; url: string; title: string; note: string; created_at: string; updated_at: string };
+
 export function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 }
@@ -72,6 +74,7 @@ export function buildReadableHtml(
   attachments: ExportAttachment[],
   zipPaths: Map<string, string>,
   exportedAt: string,
+  links: ExportLink[] = [],
 ): string {
   const byEntry = new Map<string, ExportAttachment[]>();
   for (const a of attachments) {
@@ -114,10 +117,23 @@ body{font-family:Georgia,"Times New Roman",serif;background:#fbf6ee;color:#3b334
 h1{font-weight:normal}article{background:#fffdf9;border:1px solid #eadfd2;border-radius:1rem;padding:1.5rem;margin:1.5rem 0}
 h2{margin:0;font-weight:normal}.meta{color:#5e5296;font-size:.9rem;margin:.25rem 0 1rem}.content{white-space:pre-wrap}
 .photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(10rem,1fr));gap:.5rem;margin-top:1rem}.photos img{width:100%;border-radius:.5rem}
-audio{width:100%}
+audio{width:100%}.links{list-style:none;padding:0}.links li{background:#fffdf9;border:1px solid #eadfd2;border-radius:1rem;padding:1rem 1.25rem;margin:.75rem 0}
 </style></head><body>
 <h1>Nhật Ký Của Ý</h1>
 <p>${escapeHtml(displayName)} · ${entries.length} · ${escapeHtml(exportedAt)}</p>
 ${body}
+${
+  links.length
+    ? `<h1>Liên kết đã lưu</h1>\n<ul class="links">${links
+        .filter((l) => /^https?:\/\//i.test(l.url))
+        .map(
+          (l) =>
+            `<li><a href="${escapeHtml(l.url)}" rel="noopener noreferrer">${escapeHtml(l.title || l.url)}</a><br><small>${escapeHtml(l.created_at)}</small>${
+              l.note ? `<div class="content">${escapeHtml(l.note)}</div>` : ""
+            }</li>`,
+        )
+        .join("")}</ul>`
+    : ""
+}
 </body></html>`;
 }
